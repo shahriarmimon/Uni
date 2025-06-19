@@ -19,21 +19,8 @@
             border-bottom: 2px solid transparent;
         }
         .nav-link:hover, .nav-link.active {
-            color: #15803d; /* green-700 */
-            border-bottom-color: #15803d;
-        }
-        .stat-card {
-            background-color: white;
-            border: 1px solid #e2e8f0; /* slate-200 */
-            border-radius: 0.75rem;
-            padding: 1.5rem; /* Adjusted padding for smaller screens */
-            text-align: center;
-            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.05), 0 2px 4px -2px rgb(0 0 0 / 0.05);
-        }
-        @media (min-width: 640px) {
-            .stat-card {
-                padding: 2rem;
-            }
+            color: #166534; /* green-800 */
+            border-bottom-color: #166534;
         }
         .chart-container {
             position: relative;
@@ -60,6 +47,7 @@
         .solution-tab.active {
             background-color: #16a34a; /* green-600 */
             color: white;
+            transform: translateY(-2px);
             box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
         }
         .solution-tab.active h4 {
@@ -71,21 +59,12 @@
         .solution-tab {
             transition: all 0.2s ease-in-out;
         }
-        .loader {
-            border: 4px solid #f3f3f3; /* Light grey */
-            border-top: 4px solid #f97316; /* Orange */
-            border-radius: 50%;
-            width: 32px;
-            height: 32px;
-            animation: spin 1s linear infinite;
-        }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+        .hero-bg {
+             background-image: linear-gradient(rgba(240, 253, 244, 0.95), rgba(240, 253, 244, 0.95)), url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Cg fill='%23dcfce7' fill-opacity='0.6'%3E%3Crect x='0' y='0' width='10' height='10'/%3E%3C/g%3E%3C/svg%3E");
         }
     </style>
 </head>
-<body class="text-slate-800">
+<body class="text-slate-800 antialiased">
 
     <header class="bg-white/90 backdrop-blur-md sticky top-0 z-50 shadow-sm">
         <nav class="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -109,7 +88,7 @@
     </header>
 
     <main>
-        <section id="hero" class="relative bg-green-50 pt-20 pb-24 md:pt-28 md:pb-32">
+        <section id="hero" class="relative hero-bg pt-20 pb-24 md:pt-28 md:pb-32">
             <div class="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
                 <h1 class="text-4xl md:text-6xl font-extrabold text-green-900 tracking-tight">A Blueprint for a Food-Secure Bangladesh</h1>
                 <p class="mt-4 max-w-3xl mx-auto text-lg md:text-xl text-slate-600">Introducing the Agri-Preserve Hub: a decentralized cooling and drying infrastructure to eliminate post-harvest loss, empower smallholder farmers, and unlock our nation's agricultural potential.</p>
@@ -122,29 +101,28 @@
 
         <section id="crisis" class="py-20 sm:py-24 bg-white">
             <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="max-w-3xl">
-                    <h2 class="section-heading text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">The Post-Harvest Imperative</h2>
-                    <p class="mt-4 text-lg text-slate-600">Bangladesh has achieved incredible growth in food production, but this success is severely undermined by a systemic failure in the post-harvest value chain, leading to staggering economic and nutritional losses.</p>
+                <div class="max-w-3xl mx-auto text-center">
+                    <h2 class="text-base font-semibold text-orange-600 tracking-wider uppercase">The Challenge</h2>
+                    <p class="mt-2 text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">The Post-Harvest Imperative</p>
+                    <p class="mt-4 text-lg text-slate-600">Bangladesh's agricultural success is undermined by a systemic failure in the post-harvest value chain, leading to staggering economic and nutritional losses.</p>
                 </div>
 
                 <div class="mt-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-                    <div class="stat-card">
+                    <div class="bg-orange-50 p-6 rounded-lg text-center">
                         <div class="stat-number font-extrabold text-orange-600">20-45%</div>
-                        <p class="mt-2 text-lg font-medium text-slate-700">Loss of Fruits & Vegetables</p>
+                        <p class="mt-2 font-semibold text-slate-700">Loss of Fruits & Vegetables</p>
                     </div>
-                    <div class="stat-card">
-                        <div class="stat-number font-extrabold text-orange-600">$2.4 Billion</div>
-                        <p class="mt-2 text-lg font-medium text-slate-700">Annual Economic Drain</p>
-                        <p class="text-sm text-slate-500">(Approx. ৳28,000 Crore)</p>
+                    <div class="bg-red-50 p-6 rounded-lg text-center">
+                        <div class="stat-number font-extrabold text-red-600">$2.4B</div>
+                        <p class="mt-2 font-semibold text-slate-700">Annual Economic Drain</p>
                     </div>
-                    <div class="stat-card">
-                        <div class="stat-number font-extrabold text-orange-600">~18%</div>
-                        <p class="mt-2 text-lg font-medium text-slate-700">Loss of Paddy & Wheat</p>
+                    <div class="bg-blue-50 p-6 rounded-lg text-center">
+                        <div class="stat-number font-extrabold text-blue-600">~18%</div>
+                        <p class="mt-2 font-semibold text-slate-700">Loss of Paddy & Wheat</p>
                     </div>
-                    <div class="stat-card">
-                        <div class="stat-number font-extrabold text-orange-600">84%</div>
-                        <p class="mt-2 text-lg font-medium text-slate-700">Farmers are Smallholders</p>
-                        <p class="text-sm text-slate-500">Most vulnerable to these losses</p>
+                     <div class="bg-green-50 p-6 rounded-lg text-center">
+                        <div class="stat-number font-extrabold text-green-600">84%</div>
+                        <p class="mt-2 font-semibold text-slate-700">Farmers are Smallholders</p>
                     </div>
                 </div>
 
@@ -159,9 +137,10 @@
 
         <section id="solution" class="py-20 sm:py-24">
             <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-                 <div class="max-w-3xl">
-                    <h2 class="section-heading text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">The Agri-Preserve Hub Solution</h2>
-                    <p class="mt-4 text-lg text-slate-600">A decentralized, multi-functional, and technologically appropriate infrastructure node designed for the heart of farming communities. It is more than storage; it's a first-mile service and aggregation center.</p>
+                 <div class="max-w-3xl mx-auto text-center">
+                    <h2 class="text-base font-semibold text-green-700 tracking-wider uppercase">The Innovation</h2>
+                    <p class="mt-2 text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">The Agri-Preserve Hub Solution</p>
+                    <p class="mt-4 text-lg text-slate-600">A decentralized, multi-functional, and technologically appropriate infrastructure node designed for the heart of farming communities.</p>
                 </div>
                 <div class="mt-16 flex flex-col items-center">
                     <div class="w-full max-w-4xl mb-12">
@@ -170,17 +149,17 @@
                     
                     <div class="w-full max-w-5xl">
                          <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-                             <button class="solution-tab active w-full text-left p-6 bg-white rounded-lg shadow" data-target="cooling">
-                                <h4 class="text-xl font-bold text-green-700">1. Solar-Powered Cooling</h4>
-                                <p class="mt-1 text-slate-600">Extends shelf life of perishables from days to weeks using reliable, off-grid energy.</p>
+                             <button class="solution-tab active w-full text-left p-6 bg-white rounded-lg shadow-md" data-target="cooling">
+                                <h4 class="text-xl font-bold text-green-800">1. Solar-Powered Cooling</h4>
+                                <p class="mt-1 text-slate-600">Extends shelf life of perishables from days to weeks.</p>
                             </button>
-                            <button class="solution-tab w-full text-left p-6 bg-white rounded-lg shadow" data-target="drying">
-                                <h4 class="text-xl font-bold text-green-700">2. Advanced Crop Drying</h4>
-                                <p class="mt-1 text-slate-600">Reduces spoilage in cereals and spices and creates new value-added products.</p>
+                            <button class="solution-tab w-full text-left p-6 bg-white rounded-lg shadow-md" data-target="drying">
+                                <h4 class="text-xl font-bold text-green-800">2. Advanced Crop Drying</h4>
+                                <p class="mt-1 text-slate-600">Creates high-value dried products from surplus crops.</p>
                             </button>
-                            <button class="solution-tab w-full text-left p-6 bg-white rounded-lg shadow" data-target="services">
-                                <h4 class="text-xl font-bold text-green-700">3. Value-Added Services</h4>
-                                <p class="mt-1 text-slate-600">Provides sorting, grading, and packaging to meet premium market standards.</p>
+                            <button class="solution-tab w-full text-left p-6 bg-white rounded-lg shadow-md" data-target="services">
+                                <h4 class="text-xl font-bold text-green-800">3. Value-Added Services</h4>
+                                <p class="mt-1 text-slate-600">Provides sorting, grading, and premium packaging.</p>
                             </button>
                         </div>
                          <div class="bg-white p-6 rounded-xl shadow-lg border min-h-[280px]">
@@ -211,28 +190,6 @@
                         </div>
                     </div>
                 </div>
-                 <div class="mt-16 w-full max-w-5xl mx-auto bg-white p-6 rounded-xl shadow-lg border">
-                     <h3 class="text-2xl font-bold text-center text-slate-800">✨ Explore Value-Addition Potential</h3>
-                     <p class="mt-2 text-center text-slate-600 max-w-2xl mx-auto">Select a local crop to discover creative, high-value dried products that can be produced using the hub's Hybrid Dryer.</p>
-                     <div class="mt-6 max-w-lg mx-auto flex flex-col sm:flex-row items-center gap-4">
-                         <select id="crop-select" class="w-full sm:w-1/2 p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500">
-                            <option>Mango</option>
-                            <option>Jackfruit</option>
-                            <option>Tomato</option>
-                            <option>Chili</option>
-                            <option>Litchi</option>
-                            <option>Pineapple</option>
-                            <option>Potato</option>
-                            <option>Brinjal</option>
-                            <option>Turmeric</option>
-                         </select>
-                         <button id="generate-products-btn" class="w-full sm:w-1/2 bg-orange-500 text-white font-bold py-3 px-4 rounded-lg hover:bg-orange-600 transition-colors flex items-center justify-center">
-                            Generate Ideas
-                         </button>
-                     </div>
-                     <div id="products-loader" class="hidden mt-6 flex justify-center"><div class="loader"></div></div>
-                     <div id="products-output" class="mt-8 text-left space-y-4"></div>
-                </div>
             </div>
         </section>
         
@@ -242,18 +199,41 @@
                     <h2 class="section-heading text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">Technology Deep-Dive</h2>
                     <p class="mt-4 text-lg text-slate-600">The hub's success relies on appropriate, resilient, and sustainable technologies. Our selection prioritizes energy independence, reliability, and the potential for local manufacturing.</p>
                 </div>
-                <div class="mt-16 grid grid-cols-1 md:grid-cols-2 gap-12">
-                    <div>
-                        <h3 class="text-2xl font-bold text-slate-800">Solar Cooling: The Power of Thermal Storage</h3>
-                        <p class="mt-4 text-slate-600">Instead of relying on expensive batteries with limited lifespans, our cooling units prioritize **ice-based Thermal Energy Storage (TES)**. Surplus solar energy during the day is used to make ice. At night, a simple fan circulates air over the ice to maintain the cold room's temperature. This system is mechanically simpler, more durable, and environmentally safer than battery alternatives, making it ideal for remote rural settings.</p>
-                    </div>
-                    <div>
-                        <h3 class="text-2xl font-bold text-slate-800">Hybrid Drying: The Right Tool for the Job</h3>
-                        <p class="mt-4 text-slate-600">A one-size-fits-all approach to drying is inefficient. Our hybrid model allows for customization:</p>
-                        <ul class="mt-4 space-y-2 text-slate-600 list-disc list-inside">
-                            <li><strong>BARI Solar Dryer:</strong> Perfect for high-value fruits and vegetables, its indirect heating preserves quality and nutrients.</li>
-                            <li><strong>Biomass Gasifier Dryer:</strong> Essential for monsoon paddy harvests, it uses rice husks as fuel to provide powerful, all-weather drying, preventing spoilage and aflatoxin contamination.</li>
+                <div class="mt-16 grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div class="bg-slate-50 border border-slate-200 rounded-xl p-8">
+                        <h3 class="text-2xl font-bold text-slate-800 flex items-center"><span class="text-3xl mr-3">❄️</span> Solar Cooling</h3>
+                        <p class="mt-4 text-slate-600">Our cooling units prioritize <span class="bg-green-100 text-green-800 font-semibold px-2 py-1 rounded-md">ice-based Thermal Energy Storage (TES)</span> over batteries for superior durability, lower maintenance, and enhanced environmental safety in rural settings.</p>
+                        <ul class="mt-4 space-y-2 text-slate-600">
+                           <li class="flex"><span class="text-green-600 font-bold mr-2">✓</span>Energy Resilience</li>
+                           <li class="flex"><span class="text-green-600 font-bold mr-2">✓</span>Longer Lifespan than Batteries</li>
+                           <li class="flex"><span class="text-green-600 font-bold mr-2">✓</span>Lower Maintenance Costs</li>
                         </ul>
+                    </div>
+                    <div class="bg-slate-50 border border-slate-200 rounded-xl p-8">
+                        <h3 class="text-2xl font-bold text-slate-800 flex items-center"><span class="text-3xl mr-3">☀️</span> Hybrid Drying</h3>
+                        <p class="mt-4 text-slate-600">A flexible approach allows for customization based on local crops and weather patterns, ensuring efficiency and quality.</p>
+                         <ul class="mt-4 space-y-2 text-slate-600">
+                           <li class="flex"><span class="text-green-600 font-bold mr-2">✓</span>Quality Preservation via Indirect Heat</li>
+                           <li class="flex"><span class="text-green-600 font-bold mr-2">✓</span>All-Weather Capability</li>
+                           <li class="flex"><span class="text-green-600 font-bold mr-2">✓</span>Fuel Flexibility (Solar & Biomass)</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="mt-12 bg-white p-8 rounded-xl border border-slate-200 shadow-sm">
+                    <h3 class="text-2xl font-bold text-center text-slate-800">Strategic Rationale: Building a Domestic Ecosystem</h3>
+                    <div class="mt-6 grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+                        <div>
+                            <h4 class="font-bold text-lg text-green-700">Cost Reduction</h4>
+                            <p class="text-slate-600 text-sm mt-1">Local assembly and manufacturing reduces import tariffs and shipping costs, making hubs more affordable.</p>
+                        </div>
+                         <div>
+                            <h4 class="font-bold text-lg text-green-700">Job Creation</h4>
+                            <p class="text-slate-600 text-sm mt-1">Creates skilled rural jobs in manufacturing, assembly, and maintenance, boosting local economies.</p>
+                        </div>
+                         <div>
+                            <h4 class="font-bold text-lg text-green-700">Supply Chain Resilience</h4>
+                            <p class="text-slate-600 text-sm mt-1">Ensures rapid access to spare parts and trained technicians, minimizing downtime and extending equipment life.</p>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -266,17 +246,17 @@
                     <p class="mt-4 text-lg text-slate-600">The hub functions as a commercial launchpad, transforming farmers from isolated price takers into organized suppliers for high-value markets.</p>
                 </div>
                 <div class="mt-16 grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
-                     <div class="bg-white p-6 rounded-xl shadow-lg border">
-                        <h3 class="text-xl font-bold text-green-700">High-Value Domestic Retail</h3>
-                        <p class="mt-2 text-slate-600">Aggregated and graded produce from the hub can meet the stringent quality and volume requirements of supermarket chains like Shwapno and Meena Bazar, commanding premium prices.</p>
+                     <div class="bg-white p-8 rounded-xl shadow-lg border-t-4 border-green-600">
+                        <h3 class="text-xl font-bold text-slate-800">High-Value Domestic Retail</h3>
+                        <p class="mt-2 text-slate-600">Meeting the quality and volume requirements of supermarket chains like Shwapno and Meena Bazar to command premium prices.</p>
                     </div>
-                    <div class="bg-white p-6 rounded-xl shadow-lg border">
-                        <h3 class="text-xl font-bold text-green-700">Food Processing Industry</h3>
-                        <p class="mt-2 text-slate-600">Hubs can act as reliable sourcing points for large processors (e.g., PRAN-RFL), supplying consistent volumes of raw materials like tomatoes and mangoes for juices and pastes.</p>
+                    <div class="bg-white p-8 rounded-xl shadow-lg border-t-4 border-green-600">
+                        <h3 class="text-xl font-bold text-slate-800">Food Processing Industry</h3>
+                        <p class="mt-2 text-slate-600">Acting as reliable sourcing points for large processors, supplying consistent volumes of raw materials like tomatoes and mangoes.</p>
                     </div>
-                    <div class="bg-white p-6 rounded-xl shadow-lg border">
-                        <h3 class="text-xl font-bold text-green-700">Export Markets</h3>
-                        <p class="mt-2 text-slate-600">By centralizing sorting, grading, and packing, hubs enable adherence to international standards (like GlobalG.A.P.), opening up lucrative export opportunities in the Middle East and Europe.</p>
+                    <div class="bg-white p-8 rounded-xl shadow-lg border-t-4 border-green-600">
+                        <h3 class="text-xl font-bold text-slate-800">Export Markets</h3>
+                        <p class="mt-2 text-slate-600">Enabling adherence to international standards (like GlobalG.A.P.) to open up lucrative export opportunities in the Middle East and Europe.</p>
                     </div>
                 </div>
             </div>
@@ -618,9 +598,11 @@ document.addEventListener('DOMContentLoaded', () => {
             let html = '';
             products.forEach(product => {
                 if (product.length > 0) {
-                    const nameMatch = product.match(/\*\*(.*?)\*\*/);
+                    let processedProduct = product.replace(/^\d\.\s*/, '');
+                    const nameMatch = processedProduct.match(/\*\*(.*?)\*\*/);
                     const name = nameMatch ? nameMatch[1] : 'Generated Product';
-                    const description = product.replace(/^\d\.\s*\*\*(.*?)\*\*:/, '').trim();
+                    let description = processedProduct.replace(/\*\*(.*?)\*\*:/, '').trim();
+                    description = description.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
 
                     html += `
                     <div class="bg-slate-50 p-4 rounded-lg border border-slate-200">
