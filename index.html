@@ -3,93 +3,105 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Agri-Preserve Hub: A Solution for Bangladesh's Post-Harvest Crisis</title>
+    <title>The Agri-Preserve Hub | A Blueprint for Bangladesh</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <!-- Chosen Palette: Warm Earth & Harvest -->
-    <!-- Application Structure Plan: A single-page, vertically scrolling narrative application. The structure is designed to guide the user on a journey: from understanding the scale of the problem to exploring the solution, its business model, its tangible impact, and the roadmap for scaling. This story-driven approach, using thematic sections with interactive dashboards and diagrams, is more persuasive and easier to digest for a diverse audience (policymakers, investors) than a direct translation of the report's chapters. Key interactions include hover/click reveals on diagrams and charts, animated statistics to draw attention to key data, and a clickable timeline to break down the implementation plan. This non-linear exploration within a linear narrative makes the content both accessible and deeply informative. -->
-    <!-- Visualization & Content Choices: 
-        1. The Crisis: Goal: Inform/Urgency. Method: Animated counters for big numbers ($2.4B), Bar Chart (Chart.js) for crop-specific loss comparison. Interaction: Hover on bars. Justification: Visual data is more memorable and allows quick comparison.
-        2. The Solution: Goal: Explain technology. Method: HTML/CSS diagram of the hub with clickable hotspots. Interaction: Click reveals detailed specs in a dynamic content panel. Justification: More engaging and less intimidating than dense text, encourages user-led discovery.
-        3. The Business Model: Goal: Clarify operations. Method: HTML/CSS flowchart for governance (FPO-led). Interaction: Hover reveals tooltips. Justification: Visually simplifies complex relationships.
-        4. The Impact: Goal: Showcase ROI. Method: Animated counters for social impact metrics, Line Chart (Chart.js) for financial viability (EBITDA). Interaction: Animation on scroll. Justification: Highlights key benefits and proves financial sustainability quickly.
-        5. The Roadmap: Goal: Outline plan. Method: Interactive HTML/CSS timeline. Interaction: Click to expand phase details. Justification: Intuitive way to present chronological steps.
-        Library/Method: Chart.js for all charts and Vanilla JS for all other interactions.
-    -->
-    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #FEFDFB;
+            background-color: #f8fafc; /* slate-50 */
+        }
+        .nav-link {
+            transition: color 0.3s ease, border-bottom-color 0.3s ease;
+            border-bottom: 2px solid transparent;
+        }
+        .nav-link:hover, .nav-link.active {
+            color: #15803d; /* green-700 */
+            border-bottom-color: #15803d;
+        }
+        .stat-card {
+            background-color: white;
+            border: 1px solid #e2e8f0; /* slate-200 */
+            border-radius: 0.75rem;
+            padding: 1.5rem; /* Adjusted padding for smaller screens */
+            text-align: center;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.05), 0 2px 4px -2px rgb(0 0 0 / 0.05);
+        }
+        @media (min-width: 640px) {
+            .stat-card {
+                padding: 2rem;
+            }
         }
         .chart-container {
             position: relative;
             width: 100%;
-            max-width: 700px;
+            max-width: 800px;
             margin-left: auto;
             margin-right: auto;
             height: 350px;
-            max-height: 45vh;
+            max-height: 50vh;
         }
         @media (min-width: 768px) {
             .chart-container {
                 height: 400px;
             }
         }
-        .nav-link {
-            transition: color 0.3s ease;
+        .section-heading {
+            border-left: 4px solid #f97316; /* orange-500 */
+            padding-left: 1rem;
         }
-        .nav-link:hover {
-            color: #15803d; /* hover:text-green-700 */
+        .stat-number {
+            font-size: clamp(2.25rem, 8vw, 3rem); /* Fluid font size */
+            line-height: 1.1;
         }
-        .kpi-card {
-            background-color: white;
-            border: 1px solid #e5e7eb;
-            border-radius: 0.75rem;
-            padding: 1.5rem;
-            text-align: center;
-            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-        }
-        .hub-hotspot {
-            cursor: pointer;
-            transition: transform 0.2s ease-out, box-shadow 0.2s ease-out;
-        }
-        .hub-hotspot:hover {
-            transform: translateY(-4px);
+        .solution-tab.active {
+            background-color: #16a34a; /* green-600 */
+            color: white;
             box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
         }
-        .active-hotspot {
-            transform: translateY(-2px);
-            box-shadow: 0 0 0 3px #16a34a; /* ring-green-600 */
-            background-color: #f0fdf4 !important; /* bg-green-50 */
+        .solution-tab.active h4 {
+             color: white;
         }
-        .timeline-item.active .timeline-dot {
-             background-color: #16a34a;
-             transform: scale(1.5);
+        .solution-tab.active p {
+             color: #dcfce7; /* green-100 */
         }
-        .timeline-item.active .timeline-content {
-            border-color: #16a34a;
+        .solution-tab {
+            transition: all 0.2s ease-in-out;
+        }
+        .loader {
+            border: 4px solid #f3f3f3; /* Light grey */
+            border-top: 4px solid #f97316; /* Orange */
+            border-radius: 50%;
+            width: 32px;
+            height: 32px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
     </style>
 </head>
-<body class="text-stone-700 antialiased">
+<body class="text-slate-800">
 
-    <header class="bg-white/80 backdrop-blur-md sticky top-0 z-50 shadow-sm">
+    <header class="bg-white/90 backdrop-blur-md sticky top-0 z-50 shadow-sm">
         <nav class="container mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between h-16">
                 <div class="flex-shrink-0">
                     <a href="#hero" class="text-xl font-bold text-green-800">Agri-Preserve Hub</a>
                 </div>
                 <div class="hidden md:block">
-                    <div class="ml-10 flex items-baseline space-x-4">
-                        <a href="#crisis" class="nav-link px-3 py-2 rounded-md text-sm font-medium text-stone-600">The Crisis</a>
-                        <a href="#solution" class="nav-link px-3 py-2 rounded-md text-sm font-medium text-stone-600">The Solution</a>
-                        <a href="#impact" class="nav-link px-3 py-2 rounded-md text-sm font-medium text-stone-600">Impact</a>
-                        <a href="#roadmap" class="nav-link px-3 py-2 rounded-md text-sm font-medium text-stone-600">Roadmap</a>
-                        <a href="#recommendations" class="nav-link px-3 py-2 rounded-md text-sm font-medium text-stone-600">Recommendations</a>
+                    <div id="nav-links" class="ml-10 flex items-baseline space-x-2 lg:space-x-3">
+                        <a href="#crisis" class="nav-link px-1 py-2 text-sm font-medium text-slate-600">The Crisis</a>
+                        <a href="#solution" class="nav-link px-1 py-2 text-sm font-medium text-slate-600">The Solution</a>
+                        <a href="#technology" class="nav-link px-1 py-2 text-sm font-medium text-slate-600">Technology</a>
+                        <a href="#market" class="nav-link px-1 py-2 text-sm font-medium text-slate-600">Markets</a>
+                        <a href="#investment" class="nav-link px-1 py-2 text-sm font-medium text-slate-600">Investment</a>
+                         <a href="#risk" class="nav-link px-1 py-2 text-sm font-medium text-slate-600">Risks</a>
+                        <a href="#roadmap" class="nav-link px-1 py-2 text-sm font-medium text-slate-600">Roadmap</a>
                     </div>
                 </div>
             </div>
@@ -97,196 +109,217 @@
     </header>
 
     <main>
-        <section id="hero" class="relative bg-amber-50/50 pt-20 pb-24 md:pt-28 md:pb-32">
+        <section id="hero" class="relative bg-green-50 pt-20 pb-24 md:pt-28 md:pb-32">
             <div class="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
-                <h1 class="text-4xl md:text-6xl font-extrabold text-green-900 tracking-tight">From Loss to Value</h1>
-                <p class="mt-4 max-w-3xl mx-auto text-lg md:text-xl text-stone-600">Transforming Bangladesh's agricultural future by tackling the $2.4 billion post-harvest crisis with community-centric cooling and drying hubs.</p>
+                <h1 class="text-4xl md:text-6xl font-extrabold text-green-900 tracking-tight">A Blueprint for a Food-Secure Bangladesh</h1>
+                <p class="mt-4 max-w-3xl mx-auto text-lg md:text-xl text-slate-600">Introducing the Agri-Preserve Hub: a decentralized cooling and drying infrastructure to eliminate post-harvest loss, empower smallholder farmers, and unlock our nation's agricultural potential.</p>
                 <div class="mt-8 flex justify-center space-x-4">
-                    <a href="#solution" class="bg-green-700 text-white font-semibold px-8 py-3 rounded-lg shadow-md hover:bg-green-800 transition-colors">Explore the Solution</a>
-                    <a href="#crisis" class="bg-white text-green-700 font-semibold px-8 py-3 rounded-lg shadow-md hover:bg-stone-100 transition-colors border border-stone-200">See the Crisis</a>
+                    <a href="#solution" class="bg-green-700 text-white font-semibold px-8 py-3 rounded-lg shadow-md hover:bg-green-800 transition-colors">Explore The Solution</a>
+                    <a href="#investment" class="bg-white text-green-700 font-semibold px-8 py-3 rounded-lg shadow-md hover:bg-slate-100 transition-colors border border-slate-200">See Investment Case</a>
+                </div>
+            </div>
+        </section>
+
+        <section id="crisis" class="py-20 sm:py-24 bg-white">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="max-w-3xl">
+                    <h2 class="section-heading text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">The Post-Harvest Imperative</h2>
+                    <p class="mt-4 text-lg text-slate-600">Bangladesh has achieved incredible growth in food production, but this success is severely undermined by a systemic failure in the post-harvest value chain, leading to staggering economic and nutritional losses.</p>
+                </div>
+
+                <div class="mt-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                    <div class="stat-card">
+                        <div class="stat-number font-extrabold text-orange-600">20-45%</div>
+                        <p class="mt-2 text-lg font-medium text-slate-700">Loss of Fruits & Vegetables</p>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number font-extrabold text-orange-600">$2.4 Billion</div>
+                        <p class="mt-2 text-lg font-medium text-slate-700">Annual Economic Drain</p>
+                        <p class="text-sm text-slate-500">(Approx. ৳28,000 Crore)</p>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number font-extrabold text-orange-600">~18%</div>
+                        <p class="mt-2 text-lg font-medium text-slate-700">Loss of Paddy & Wheat</p>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number font-extrabold text-orange-600">84%</div>
+                        <p class="mt-2 text-lg font-medium text-slate-700">Farmers are Smallholders</p>
+                        <p class="text-sm text-slate-500">Most vulnerable to these losses</p>
+                    </div>
+                </div>
+
+                <div class="mt-20">
+                    <h3 class="text-2xl font-semibold text-center text-slate-800">Post-Harvest Loss Profile for Key Crops</h3>
+                    <div class="mt-8 chart-container">
+                        <canvas id="lossChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="solution" class="py-20 sm:py-24">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                 <div class="max-w-3xl">
+                    <h2 class="section-heading text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">The Agri-Preserve Hub Solution</h2>
+                    <p class="mt-4 text-lg text-slate-600">A decentralized, multi-functional, and technologically appropriate infrastructure node designed for the heart of farming communities. It is more than storage; it's a first-mile service and aggregation center.</p>
+                </div>
+                <div class="mt-16 flex flex-col items-center">
+                    <div class="w-full max-w-4xl mb-12">
+                         <img src="https://i.ibb.co/zWtgRkhG/I.png" alt="Agri-Preserve Hub Product Design" class="rounded-xl shadow-2xl w-full h-auto object-cover border-4 border-white">
+                    </div>
+                    
+                    <div class="w-full max-w-5xl">
+                         <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                             <button class="solution-tab active w-full text-left p-6 bg-white rounded-lg shadow" data-target="cooling">
+                                <h4 class="text-xl font-bold text-green-700">1. Solar-Powered Cooling</h4>
+                                <p class="mt-1 text-slate-600">Extends shelf life of perishables from days to weeks using reliable, off-grid energy.</p>
+                            </button>
+                            <button class="solution-tab w-full text-left p-6 bg-white rounded-lg shadow" data-target="drying">
+                                <h4 class="text-xl font-bold text-green-700">2. Advanced Crop Drying</h4>
+                                <p class="mt-1 text-slate-600">Reduces spoilage in cereals and spices and creates new value-added products.</p>
+                            </button>
+                            <button class="solution-tab w-full text-left p-6 bg-white rounded-lg shadow" data-target="services">
+                                <h4 class="text-xl font-bold text-green-700">3. Value-Added Services</h4>
+                                <p class="mt-1 text-slate-600">Provides sorting, grading, and packaging to meet premium market standards.</p>
+                            </button>
+                        </div>
+                         <div class="bg-white p-6 rounded-xl shadow-lg border min-h-[280px]">
+                            <div id="cooling-content" class="solution-content">
+                                <h3 class="text-2xl font-bold text-slate-800">Cooling Unit Details</h3>
+                                <ul class="mt-4 space-y-2 text-slate-600">
+                                    <li class="flex items-start"><span class="text-green-600 font-bold mr-2">›</span><div><strong>Capacity:</strong> 3-5 Metric Tons</div></li>
+                                    <li class="flex items-start"><span class="text-green-600 font-bold mr-2">›</span><div><strong>Power:</strong> Off-grid Solar PV with battery/thermal backup</div></li>
+                                    <li class="flex items-start"><span class="text-green-600 font-bold mr-2">›</span><div><strong>Impact:</strong> Extends shelf life of tomatoes, mangoes from 2 days to 20+ days.</div></li>
+                                </ul>
+                            </div>
+                            <div id="drying-content" class="solution-content hidden">
+                                <h3 class="text-2xl font-bold text-slate-800">Drying System Details</h3>
+                                <ul class="mt-4 space-y-2 text-slate-600">
+                                    <li class="flex items-start"><span class="text-green-600 font-bold mr-2">›</span><div><strong>Technology:</strong> BARI Hybrid Solar Dryer or Biomass Gasifier Dryer</div></li>
+                                    <li class="flex items-start"><span class="text-green-600 font-bold mr-2">›</span><div><strong>Fuel:</strong> Free solar energy or agricultural residue (e.g., rice husks)</div></li>
+                                    <li class="flex items-start"><span class="text-green-600 font-bold mr-2">›</span><div><strong>Outcome:</strong> Creates high-value dried mango, tomato powder, and spices.</div></li>
+                                </ul>
+                            </div>
+                             <div id="services-content" class="solution-content hidden">
+                                <h3 class="text-2xl font-bold text-slate-800">Value-Added Service Details</h3>
+                                 <ul class="mt-4 space-y-2 text-slate-600">
+                                    <li class="flex items-start"><span class="text-green-600 font-bold mr-2">›</span><div><strong>Sorting & Grading:</strong> Equipment to meet quality standards for higher prices.</div></li>
+                                    <li class="flex items-start"><span class="text-green-600 font-bold mr-2">›</span><div><strong>Packaging:</strong> Access to plastic crates to reduce transport damage.</div></li>
+                                    <li class="flex items-start"><span class="text-green-600 font-bold mr-2">›</span><div><strong>Training Hub:</strong> Center for training on post-harvest best practices.</div></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                 <div class="mt-16 w-full max-w-5xl mx-auto bg-white p-6 rounded-xl shadow-lg border">
+                     <h3 class="text-2xl font-bold text-center text-slate-800">✨ Explore Value-Addition Potential</h3>
+                     <p class="mt-2 text-center text-slate-600 max-w-2xl mx-auto">Select a local crop to discover creative, high-value dried products that can be produced using the hub's Hybrid Dryer.</p>
+                     <div class="mt-6 max-w-lg mx-auto flex flex-col sm:flex-row items-center gap-4">
+                         <select id="crop-select" class="w-full sm:w-1/2 p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500">
+                            <option>Mango</option>
+                            <option>Jackfruit</option>
+                            <option>Tomato</option>
+                            <option>Chili</option>
+                            <option>Litchi</option>
+                            <option>Pineapple</option>
+                            <option>Potato</option>
+                            <option>Brinjal</option>
+                            <option>Turmeric</option>
+                         </select>
+                         <button id="generate-products-btn" class="w-full sm:w-1/2 bg-orange-500 text-white font-bold py-3 px-4 rounded-lg hover:bg-orange-600 transition-colors flex items-center justify-center">
+                            Generate Ideas
+                         </button>
+                     </div>
+                     <div id="products-loader" class="hidden mt-6 flex justify-center"><div class="loader"></div></div>
+                     <div id="products-output" class="mt-8 text-left space-y-4"></div>
                 </div>
             </div>
         </section>
         
-        <section id="crisis" class="py-20 sm:py-24 bg-white">
+        <section id="technology" class="py-20 sm:py-24 bg-white">
             <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="text-center">
-                    <h2 class="text-base font-semibold text-amber-600 tracking-wider uppercase">The Post-Harvest Imperative</h2>
-                    <p class="mt-2 text-3xl font-bold tracking-tight text-stone-900 sm:text-4xl">A Systemic Failure from Farm to Market</p>
-                    <p class="mt-4 max-w-2xl mx-auto text-lg text-stone-500">Bangladesh's agricultural success is undermined by staggering post-harvest losses, creating a ripple effect of economic hardship and food insecurity. This section quantifies the crisis and explores its root causes.</p>
+                 <div class="max-w-3xl">
+                    <h2 class="section-heading text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">Technology Deep-Dive</h2>
+                    <p class="mt-4 text-lg text-slate-600">The hub's success relies on appropriate, resilient, and sustainable technologies. Our selection prioritizes energy independence, reliability, and the potential for local manufacturing.</p>
                 </div>
-
-                <div class="mt-16 grid grid-cols-1 md:grid-cols-3 gap-8">
-                    <div class="kpi-card">
-                        <div class="text-5xl font-extrabold text-green-700" data-anim-counter data-target="2.4" data-suffix=" Billion">$0 B</div>
-                        <p class="mt-2 text-lg font-medium text-stone-600">Annual Economic Loss (USD)</p>
-                        <p class="mt-1 text-sm text-stone-500">A significant drain on the agricultural sector's contribution to GDP.</p>
+                <div class="mt-16 grid grid-cols-1 md:grid-cols-2 gap-12">
+                    <div>
+                        <h3 class="text-2xl font-bold text-slate-800">Solar Cooling: The Power of Thermal Storage</h3>
+                        <p class="mt-4 text-slate-600">Instead of relying on expensive batteries with limited lifespans, our cooling units prioritize **ice-based Thermal Energy Storage (TES)**. Surplus solar energy during the day is used to make ice. At night, a simple fan circulates air over the ice to maintain the cold room's temperature. This system is mechanically simpler, more durable, and environmentally safer than battery alternatives, making it ideal for remote rural settings.</p>
                     </div>
-                    <div class="kpi-card">
-                        <div class="text-5xl font-extrabold text-green-700" data-anim-counter data-target="45" data-suffix="%">0%</div>
-                        <p class="mt-2 text-lg font-medium text-stone-600">Peak Loss for Fruits & Vegetables</p>
-                        <p class="mt-1 text-sm text-stone-500">Nearly half of the harvest can be lost before reaching the consumer.</p>
-                    </div>
-                    <div class="kpi-card">
-                        <div class="text-5xl font-extrabold text-green-700" data-anim-counter data-target="0.5" data-suffix="%">0%</div>
-                        <p class="mt-2 text-lg font-medium text-stone-600">Horticultural Produce Processed</p>
-                        <p class="mt-1 text-sm text-stone-500">Lack of processing leaves farmers vulnerable to market gluts and spoilage.</p>
-                    </div>
-                </div>
-
-                <div class="mt-20">
-                    <h3 class="text-2xl font-semibold text-center text-stone-800">Post-Harvest Loss by Crop</h3>
-                    <p class="text-center mt-2 max-w-2xl mx-auto text-stone-500">For high-value crops, the figures are alarming. This chart visualizes the total estimated loss percentage for key commodities, highlighting the urgent need for preservation infrastructure.</p>
-                    <div class="mt-8 chart-container">
-                        <canvas id="phlChart"></canvas>
-                    </div>
-                </div>
-
-                <div class="mt-20">
-                    <h3 class="text-2xl font-semibold text-center text-stone-800">The Broken First-Mile Value Chain</h3>
-                    <p class="text-center mt-2 max-w-3xl mx-auto text-stone-500">The journey from farm to consumer is plagued by inefficiency, multiple intermediaries, and a lack of temperature management, leading to significant value destruction at each step.</p>
-                    <div class="mt-10 flex flex-col md:flex-row items-center justify-center space-y-4 md:space-y-0 md:space-x-4">
-                        <div class="flex items-center flex-col text-center">
-                            <div class="w-24 h-24 bg-green-100 text-green-800 rounded-full flex items-center justify-center text-3xl shadow-inner">👨‍🌾</div>
-                            <p class="font-bold mt-2">Farmer</p>
-                            <p class="text-sm text-stone-500">Distress Sales</p>
-                        </div>
-                        <div class="text-4xl text-stone-300 font-light mx-2">→</div>
-                        <div class="flex items-center flex-col text-center">
-                            <div class="w-24 h-24 bg-red-100 text-red-800 rounded-full flex items-center justify-center text-3xl shadow-inner"> посредник</div>
-                            <p class="font-bold mt-2">Middlemen</p>
-                            <p class="text-sm text-stone-500">Handling Damage</p>
-                        </div>
-                         <div class="text-4xl text-stone-300 font-light mx-2">→</div>
-                        <div class="flex items-center flex-col text-center">
-                            <div class="w-24 h-24 bg-red-100 text-red-800 rounded-full flex items-center justify-center text-3xl shadow-inner">🚚</div>
-                            <p class="font-bold mt-2">Transport</p>
-                            <p class="text-sm text-stone-500">Spoilage</p>
-                        </div>
-                        <div class="text-4xl text-stone-300 font-light mx-2">→</div>
-                        <div class="flex items-center flex-col text-center">
-                            <div class="w-24 h-24 bg-amber-100 text-amber-800 rounded-full flex items-center justify-center text-3xl shadow-inner">🛒</div>
-                            <p class="font-bold mt-2">Market</p>
-                            <p class="text-sm text-stone-500">Reduced Quality</p>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-        </section>
-
-        <section id="solution" class="py-20 sm:py-24 bg-amber-50/50">
-            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="text-center">
-                    <h2 class="text-base font-semibold text-amber-600 tracking-wider uppercase">The Innovation</h2>
-                    <p class="mt-2 text-3xl font-bold tracking-tight text-stone-900 sm:text-4xl">The Agri-Preserve Hub</p>
-                    <p class="mt-4 max-w-3xl mx-auto text-lg text-stone-500">A decentralized, modular, and off-grid facility that integrates two key technologies to empower farming communities. Click on the components below to explore the hub's innovative design.</p>
-                </div>
-                
-                <div class="mt-16 grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
-                    <div class="lg:col-span-2">
-                        <div class="relative bg-white p-6 rounded-xl shadow-lg border border-stone-200">
-                             <div class="absolute top-4 right-4 bg-yellow-400 text-yellow-900 text-xs font-bold px-3 py-1 rounded-full">OFF-GRID</div>
-                            <div class="bg-stone-100 rounded-lg h-96 flex flex-col items-center justify-center p-4">
-                               <div class="text-center text-stone-500 font-medium mb-4">REPURPOSED SHIPPING CONTAINER</div>
-                                <div class="w-full max-w-3xl h-full border-4 border-dashed border-stone-300 rounded-lg p-4 flex flex-col md:flex-row gap-4">
-                                    <div id="hotspot-cold-room" class="hub-hotspot bg-white border border-stone-200 rounded-lg flex-1 flex flex-col justify-center items-center text-center p-4">
-                                        <div class="text-4xl">❄️</div>
-                                        <h4 class="font-bold mt-2 text-stone-800">Solar Cold Room</h4>
-                                        <p class="text-sm text-stone-500">Extends shelf-life from days to weeks.</p>
-                                    </div>
-                                    <div id="hotspot-dryer" class="hub-hotspot bg-white border border-stone-200 rounded-lg flex-1 flex flex-col justify-center items-center text-center p-4">
-                                         <div class="text-4xl">☀️</div>
-                                         <h4 class="font-bold mt-2 text-stone-800">Hybrid Dryer</h4>
-                                         <p class="text-sm text-stone-500">Creates value-added products from surplus.</p>
-                                    </div>
-                                    <div id="hotspot-services" class="hub-hotspot bg-white border border-stone-200 rounded-lg flex-1 flex flex-col justify-center items-center text-center p-4">
-                                         <div class="text-4xl">📦</div>
-                                         <h4 class="font-bold mt-2 text-stone-800">Value-Add Services</h4>
-                                         <p class="text-sm text-stone-500">Sorting, grading, and packaging.</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div id="solution-details" class="lg:col-span-1 bg-white p-6 rounded-xl shadow-lg border border-stone-200 min-h-[30rem]">
-                        <div id="details-initial" class="flex flex-col items-center justify-center h-full text-center">
-                           <div class="text-5xl text-stone-400">👆</div>
-                           <p class="mt-4 font-medium text-stone-600">Select a component to view details.</p>
-                           <p class="text-sm text-stone-500">Discover how each part of the hub works to solve the post-harvest crisis.</p>
-                        </div>
-                        <div id="details-cold-room" class="hidden">
-                            <h3 class="font-bold text-xl text-stone-900 flex items-center">
-                                <span class="text-2xl mr-3">❄️</span>Solar-Powered Cold Room
-                            </h3>
-                            <p class="mt-2 text-stone-600">This high-efficiency, walk-in cold room is critical for short-term preservation, breaking the cycle of distress sales by extending produce shelf-life.</p>
-                            <ul class="mt-4 space-y-3 text-sm">
-                                <li class="flex items-start"><span class="font-bold text-green-600 mr-2">✓</span><div><strong class="text-stone-700">Capacity:</strong> 2-5 Metric Tons, ideal for community aggregation.</div></li>
-                                <li class="flex items-start"><span class="font-bold text-green-600 mr-2">✓</span><div><strong class="text-stone-700">Power:</strong> Solar PV with thermal/battery backup for 24/7 operation.</div></li>
-                                <li class="flex items-start"><span class="font-bold text-green-600 mr-2">✓</span><div><strong class="text-stone-700">Temperature:</strong> Maintained at 2°C - 8°C, optimal for various fruits and vegetables.</div></li>
-                                <li class="flex items-start"><span class="font-bold text-green-600 mr-2">✓</span><div><strong class="text-stone-700">Impact:</strong> Extends shelf life of tomatoes or mangoes from a few days to several weeks.</div></li>
-                            </ul>
-                        </div>
-                        <div id="details-dryer" class="hidden">
-                             <h3 class="font-bold text-xl text-stone-900 flex items-center">
-                                <span class="text-2xl mr-3">☀️</span>Hybrid Dryer
-                            </h3>
-                            <p class="mt-2 text-stone-600">An efficient BARI-inspired dryer that creates new revenue streams by converting surplus or B-grade produce into high-value, shelf-stable products.</p>
-                            <ul class="mt-4 space-y-3 text-sm">
-                                <li class="flex items-start"><span class="font-bold text-green-600 mr-2">✓</span><div><strong class="text-stone-700">Dual-Fuel:</strong> Uses free solar thermal energy, supplemented by a biomass gasifier for all-weather operation.</div></li>
-                                <li class="flex items-start"><span class="font-bold text-green-600 mr-2">✓</span><div><strong class="text-stone-700">Fuel Source:</strong> Biomass gasifier runs on locally available agricultural waste like rice husks or maize cobs.</div></li>
-                                <li class="flex items-start"><span class="font-bold text-green-600 mr-2">✓</span><div><strong class="text-stone-700">Outcome:</strong> Produces dried fruits, vegetables, and spices, turning potential waste into valuable assets.</div></li>
-                                <li class="flex items-start"><span class="font-bold text-green-600 mr-2">✓</span><div><strong class="text-stone-700">Viability:</strong> Locally developed technology with a strong Benefit-Cost Ratio (1.40) and rapid payback.</div></li>
-                            </ul>
-                        </div>
-                        <div id="details-services" class="hidden">
-                             <h3 class="font-bold text-xl text-stone-900 flex items-center">
-                                <span class="text-2xl mr-3">📦</span>Value-Added Services & Business Model
-                            </h3>
-                            <p class="mt-2 text-stone-600">The hub is a community-centric business, owned by a Farmer Producer Organization (FPO) and operated on an accessible pay-per-use model.</p>
-                            <ul class="mt-4 space-y-3 text-sm">
-                                <li class="flex items-start"><span class="font-bold text-green-600 mr-2">✓</span><div><strong class="text-stone-700">Pay-Per-Use Access:</strong> Farmers pay a small fee per crate for storage or per kg for drying, de-risking technology adoption.</div></li>
-                                <li class="flex items-start"><span class="font-bold text-green-600 mr-2">✓</span><div><strong class="text-stone-700">Market Linkage:</strong> The hub acts as an aggregation point, enabling direct sales to high-value buyers and increasing farmer bargaining power.</div></li>
-                                <li class="flex items-start"><span class="font-bold text-green-600 mr-2">✓</span><div><strong class="text-stone-700">Quality Improvement:</strong> On-site facilities for sorting, grading, and improved packaging to meet formal market standards.</div></li>
-                                <li class="flex items-start"><span class="font-bold text-green-600 mr-2">✓</span><div><strong class="text-stone-700">From Price Takers to Market Makers:</strong> The hub transforms farmers from isolated sellers into a collective market force.</div></li>
-                            </ul>
-                        </div>
+                    <div>
+                        <h3 class="text-2xl font-bold text-slate-800">Hybrid Drying: The Right Tool for the Job</h3>
+                        <p class="mt-4 text-slate-600">A one-size-fits-all approach to drying is inefficient. Our hybrid model allows for customization:
+                            <br>• **BARI Solar Dryer:** Perfect for high-value fruits and vegetables, its indirect heating preserves quality and nutrients.
+                            <br>• **Biomass Gasifier Dryer:** Essential for monsoon paddy harvests, it uses rice husks as fuel to provide powerful, all-weather drying, preventing spoilage and aflatoxin contamination.
+                        </p>
                     </div>
                 </div>
             </div>
         </section>
 
-        <section id="impact" class="py-20 sm:py-24 bg-white">
-             <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="text-center">
-                    <h2 class="text-base font-semibold text-amber-600 tracking-wider uppercase">Quantified Impact Assessment</h2>
-                    <p class="mt-2 text-3xl font-bold tracking-tight text-stone-900 sm:text-4xl">A Catalyst for Economic Transformation</p>
-                    <p class="mt-4 max-w-3xl mx-auto text-lg text-stone-500">The Agri-Preserve Hub is more than a loss-prevention tool; it's a bankable social enterprise designed to deliver profound and measurable returns—socially, environmentally, and financially.</p>
+        <section id="market" class="py-20 sm:py-24">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="max-w-3xl">
+                    <h2 class="section-heading text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">Market Linkage Strategy</h2>
+                    <p class="mt-4 text-lg text-slate-600">The hub functions as a commercial launchpad, transforming farmers from isolated price takers into organized suppliers for high-value markets.</p>
                 </div>
-                
-                <div class="mt-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-                    <div class="kpi-card">
-                        <div class="text-5xl font-extrabold text-green-700" data-anim-counter data-target="30" data-suffix="%">0%</div>
-                        <p class="mt-2 text-lg font-medium text-stone-600">Increase in Farmer Income</p>
+                <div class="mt-16 grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+                     <div class="bg-white p-6 rounded-xl shadow-lg border">
+                        <h3 class="text-xl font-bold text-green-700">High-Value Domestic Retail</h3>
+                        <p class="mt-2 text-slate-600">Aggregated and graded produce from the hub can meet the stringent quality and volume requirements of supermarket chains like Shwapno and Meena Bazar, commanding premium prices.</p>
                     </div>
-                     <div class="kpi-card">
-                        <div class="text-5xl font-extrabold text-green-700" data-anim-counter data-target="500" data-suffix=" MT">0 MT</div>
-                        <p class="mt-2 text-lg font-medium text-stone-600">Food Saved Annually Per Hub</p>
+                    <div class="bg-white p-6 rounded-xl shadow-lg border">
+                        <h3 class="text-xl font-bold text-green-700">Food Processing Industry</h3>
+                        <p class="mt-2 text-slate-600">Hubs can act as reliable sourcing points for large processors (e.g., PRAN-RFL), supplying consistent volumes of raw materials like tomatoes and mangoes for juices and pastes.</p>
                     </div>
-                    <div class="kpi-card">
-                        <div class="text-5xl font-extrabold text-green-700" data-anim-counter data-target="2" data-suffix="+">0+</div>
-                        <p class="mt-2 text-lg font-medium text-stone-600">Direct Skilled Jobs Per Hub</p>
-                    </div>
-                    <div class="kpi-card">
-                        <div class="text-5xl font-extrabold text-green-700" data-anim-counter data-target="22" data-suffix="%">0%</div>
-                        <p class="mt-2 text-lg font-medium text-stone-600">Projected 10-Year IRR</p>
+                    <div class="bg-white p-6 rounded-xl shadow-lg border">
+                        <h3 class="text-xl font-bold text-green-700">Export Markets</h3>
+                        <p class="mt-2 text-slate-600">By centralizing sorting, grading, and packing, hubs enable adherence to international standards (like GlobalG.A.P.), opening up lucrative export opportunities in the Middle East and Europe.</p>
                     </div>
                 </div>
+            </div>
+        </section>
 
+        <section id="investment" class="py-20 sm:py-24 bg-white">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="max-w-3xl">
+                    <h2 class="section-heading text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">Investment & Financial Viability (Low-Cost Pilot Model)</h2>
+                    <p class="mt-4 text-lg text-slate-600">The Agri-Preserve Hub is a bankable social enterprise. The following is a revised, lower-cost model for an initial pilot, demonstrating extreme affordability.</p>
+                </div>
+                <div class="mt-16 grid grid-cols-1 lg:grid-cols-2 gap-12">
+                    <div>
+                        <h3 class="text-2xl font-bold text-slate-800">Capital Expenditure (CapEx)</h3>
+                        <div class="mt-4 overflow-x-auto">
+                            <table class="min-w-full text-left">
+                                <thead class="bg-slate-100"><tr><th class="p-3">Item</th><th class="p-3">Cost (BDT)</th></tr></thead>
+                                <tbody>
+                                    <tr class="border-b"><td class="p-3">2-3 MT Locally Assembled Cold Storage</td><td class="p-3">~ ৳500,000</td></tr>
+                                    <tr class="border-b"><td class="p-3">BARI Hybrid Solar Dryer</td><td class="p-3">~ ৳100,000</td></tr>
+                                    <tr class="border-b"><td class="p-3">Site Prep & Basic Shelter</td><td class="p-3">~ ৳250,000</td></tr>
+                                    <tr class="border-b"><td class="p-3">Ancillary Equipment</td><td class="p-3">~ ৳150,000</td></tr>
+                                    <tr class="border-b"><td class="p-3 font-bold">Total Estimated CapEx</td><td class="p-3 font-bold">~ ৳1,000,000</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                     <div>
+                        <h3 class="text-2xl font-bold text-slate-800">Annual Operating Expenses (OpEx)</h3>
+                        <div class="mt-4 overflow-x-auto">
+                            <table class="min-w-full text-left">
+                                <thead class="bg-slate-100"><tr><th class="p-3">Item</th><th class="p-3">Cost (BDT)</th></tr></thead>
+                                <tbody>
+                                    <tr class="border-b"><td class="p-3">Personnel (1 Part-Time/Stipend)</td><td class="p-3">~ ৳180,000</td></tr>
+                                    <tr class="border-b"><td class="p-3">Maintenance</td><td class="p-3">~ ৳60,000</td></tr>
+                                    <tr class="border-b"><td class="p-3">Utilities & Consumables</td><td class="p-3">~ ৳60,000</td></tr>
+                                    <tr class="border-b"><td class="p-3 font-bold">Total Estimated OpEx</td><td class="p-3 font-bold">~ ৳300,000</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
                 <div class="mt-20">
-                    <h3 class="text-2xl font-semibold text-center text-stone-800">Path to Profitability</h3>
-                    <p class="text-center mt-2 max-w-2xl mx-auto text-stone-500">Conservative financial projections show a clear path to self-sufficiency, with the hub reaching a positive EBITDA in Year 2. This makes the model a viable candidate for both impact and commercial investment.</p>
+                    <h3 class="text-2xl font-semibold text-center text-slate-800">Path to Financial Sustainability (5-Year EBITDA Projection)</h3>
                     <div class="mt-8 chart-container">
                         <canvas id="financialsChart"></canvas>
                     </div>
@@ -294,234 +327,235 @@
             </div>
         </section>
 
-        <section id="roadmap" class="py-20 sm:py-24 bg-amber-50/50">
+        <section id="risk" class="py-20 sm:py-24">
             <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="text-center">
-                    <h2 class="text-base font-semibold text-amber-600 tracking-wider uppercase">Strategic Roadmap</h2>
-                    <p class="mt-2 text-3xl font-bold tracking-tight text-stone-900 sm:text-4xl">From Pilot to National Scale</p>
-                    <p class="mt-4 max-w-3xl mx-auto text-lg text-stone-500">A phased, partnership-driven strategy is essential for deploying a nationwide network. Click on each phase to see the plan.</p>
+                 <div class="max-w-3xl">
+                    <h2 class="section-heading text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">Risk Assessment & Mitigation</h2>
+                    <p class="mt-4 text-lg text-slate-600">Proactive risk management is key to ensuring the long-term success and sustainability of the hub network.</p>
                 </div>
-
-                <div class="mt-16">
-                    <div class="relative">
-                        <div class="absolute left-1/2 top-0 h-full w-0.5 bg-stone-200" aria-hidden="true"></div>
-                        <ul id="timeline-container" class="space-y-12">
-                            <li class="timeline-item relative flex items-start cursor-pointer" data-phase="1">
-                                <div class="timeline-dot absolute left-1/2 -translate-x-1/2 w-4 h-4 bg-stone-300 rounded-full transition-all duration-300"></div>
-                                <div class="timeline-content w-2/5 p-4 rounded-lg border-2 border-transparent">
-                                    <h4 class="font-bold text-lg text-right">Phase 1: Pilot</h4>
-                                    <p class="text-sm text-right text-stone-500">Year 1-2</p>
-                                </div>
-                            </li>
-                            <li class="timeline-item relative flex items-start justify-end cursor-pointer" data-phase="2">
-                                <div class="timeline-dot absolute left-1/2 -translate-x-1/2 w-4 h-4 bg-stone-300 rounded-full transition-all duration-300"></div>
-                                <div class="timeline-content w-2/5 p-4 rounded-lg border-2 border-transparent">
-                                    <h4 class="font-bold text-lg text-left">Phase 2: Tech Transfer</h4>
-                                    <p class="text-sm text-left text-stone-500">Years 2-3</p>
-                                </div>
-                            </li>
-                            <li class="timeline-item relative flex items-start cursor-pointer" data-phase="3">
-                                <div class="timeline-dot absolute left-1/2 -translate-x-1/2 w-4 h-4 bg-stone-300 rounded-full transition-all duration-300"></div>
-                                <div class="timeline-content w-2/5 p-4 rounded-lg border-2 border-transparent">
-                                    <h4 class="font-bold text-lg text-right">Phase 3: Blended Finance</h4>
-                                    <p class="text-sm text-right text-stone-500">Year 3+</p>
-                                </div>
-                            </li>
-                            <li class="timeline-item relative flex items-start justify-end cursor-pointer" data-phase="4">
-                                <div class="timeline-dot absolute left-1/2 -translate-x-1/2 w-4 h-4 bg-stone-300 rounded-full transition-all duration-300"></div>
-                                <div class="timeline-content w-2/5 p-4 rounded-lg border-2 border-transparent">
-                                    <h4 class="font-bold text-lg text-left">Phase 4: Policy Integration</h4>
-                                    <p class="text-sm text-left text-stone-500">Ongoing</p>
-                                </div>
-                            </li>
-                        </ul>
+                <div class="mt-12 grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div class="bg-white p-6 rounded-lg shadow-sm border">
+                        <h4 class="font-bold text-lg text-red-600">Operational Risk</h4>
+                        <p class="mt-2 text-slate-600">Low farmer adoption or technical failures.</p>
+                        <p class="mt-2 font-semibold text-green-700">Mitigation: Intensive community sensitization, low-risk 'Pay-As-You-Store' pricing, and robust preventative maintenance schedules with locally available spare parts.</p>
                     </div>
-
-                    <div id="timeline-details" class="mt-12 bg-white p-6 rounded-xl shadow-lg border border-stone-200 min-h-[12rem]">
-                        <!-- Dynamic Content Here -->
+                    <div class="bg-white p-6 rounded-lg shadow-sm border">
+                        <h4 class="font-bold text-lg text-red-600">Market Risk</h4>
+                        <p class="mt-2 text-slate-600">Price volatility or buyer default.</p>
+                        <p class="mt-2 font-semibold text-green-700">Mitigation: Diversifying into value-added dried products to hedge against fresh price drops, securing formal contracts, and using secure ag-tech payment platforms.</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg shadow-sm border">
+                        <h4 class="font-bold text-lg text-red-600">Financial Risk</h4>
+                        <p class="mt-2 text-slate-600">Revenue shortfalls or lack of access to FPO finance.</p>
+                        <p class="mt-2 font-semibold text-green-700">Mitigation: Diversifying revenue streams beyond just cooling, securing blended finance (grant + loan) to de-risk initial investment, and building a strong financial track record.</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg shadow-sm border">
+                        <h4 class="font-bold text-lg text-red-600">Governance Risk</h4>
+                        <p class="mt-2 text-slate-600">Internal FPO conflicts or mismanagement.</p>
+                        <p class="mt-2 font-semibold text-green-700">Mitigation: Separating FPO ownership from professional day-to-day management, mandatory governance training for FPO boards, and transparent financial reporting.</p>
                     </div>
                 </div>
             </div>
         </section>
-        
-        <section id="recommendations" class="py-20 sm:py-24 bg-white">
-            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="text-center">
-                    <h2 class="text-base font-semibold text-amber-600 tracking-wider uppercase">Call to Action</h2>
-                    <p class="mt-2 text-3xl font-bold tracking-tight text-stone-900 sm:text-4xl">Strategic Recommendations for Stakeholders</p>
-                    <p class="mt-4 max-w-3xl mx-auto text-lg text-stone-500">The Agri-Preserve Hub presents a pivotal opportunity. Realizing its potential requires decisive action from key partners. Select a group below to view targeted recommendations.</p>
+
+        <section id="roadmap" class="py-20 sm:py-24 bg-white">
+             <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="max-w-3xl">
+                    <h2 class="section-heading text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">Strategic Roadmap to Scale</h2>
+                    <p class="mt-4 text-lg text-slate-600">A phased, partnership-driven strategy is essential for deploying a nationwide network, moving from pilot to policy integration.</p>
                 </div>
-                <div class="max-w-4xl mx-auto mt-12">
-                    <div id="accordion-container" class="space-y-4">
-                        <!-- Accordion Items will be injected by JS -->
+                <div class="mt-16 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 text-left">
+                     <div class="bg-slate-50 p-6 rounded-xl border-t-4 border-orange-500">
+                        <p class="font-bold text-slate-500">YEARS 1-2</p>
+                        <h4 class="mt-1 text-xl font-bold text-slate-800">Phase 1: Pilot</h4>
+                        <p class="mt-2 text-slate-600">Validate the model at 3-5 sites in high-loss zones with active FPOs and robust M&E.</p>
+                    </div>
+                    <div class="bg-slate-50 p-6 rounded-xl border-t-4 border-orange-500">
+                        <p class="font-bold text-slate-500">YEAR 2-3</p>
+                        <h4 class="mt-1 text-xl font-bold text-slate-800">Phase 2: Tech Transfer</h4>
+                        <p class="mt-2 text-slate-600">License and commercialize hub technologies with local manufacturers to ensure a domestic supply chain.</p>
+                    </div>
+                    <div class="bg-slate-50 p-6 rounded-xl border-t-4 border-orange-500">
+                        <p class="font-bold text-slate-500">YEAR 3+</p>
+                        <h4 class="mt-1 text-xl font-bold text-slate-800">Phase 3: Blended Finance</h4>
+                        <p class="mt-2 text-slate-600">Secure large-scale financing from climate funds, DFIs, and impact investors for national rollout.</p>
+                    </div>
+                    <div class="bg-slate-50 p-6 rounded-xl border-t-4 border-orange-500">
+                        <p class="font-bold text-slate-500">ONGOING</p>
+                        <h4 class="mt-1 text-xl font-bold text-slate-800">Phase 4: Policy Integration</h4>
+                        <p class="mt-2 text-slate-600">Embed the hub network into national policy, enable the FPO ecosystem, and utilize PPP frameworks.</p>
                     </div>
                 </div>
-            </div>
+             </div>
         </section>
 
     </main>
-
-    <footer class="bg-stone-800 text-stone-300">
-        <div class="container mx-auto py-8 px-4 sm:px-6 lg:px-8 text-center">
-            <p class="font-semibold text-white">Agri-Preserve Hub Initiative</p>
-            <p class="text-sm mt-1">A blueprint for a food-secure and prosperous agricultural future for Bangladesh.</p>
-            <p class="text-xs mt-4 text-stone-400">This interactive report was generated based on the "Agri-Preserve" Hub research blueprint. All data derived from the source report.</p>
-             <p class="text-xs mt-1 text-stone-500">Jointly presented for the seminar by IUBAT and BARI, June 24, 2025.</p>
+    
+    <footer class="bg-slate-800 text-slate-300">
+        <div class="container mx-auto py-12 px-4 sm:px-6 lg:px-8 text-center">
+             <div class="max-w-xl mx-auto">
+                <h3 class="text-lg font-semibold text-white">About the Author</h3>
+                <p class="mt-2 text-slate-400">This project blueprint was researched and developed by:</p>
+                <p class="mt-4 font-bold text-xl text-white">Shahriar Mannan Imon Talukder</p>
+                <p class="text-slate-300">Undergraduate Student, BSAg Program</p>
+                <p class="text-slate-300">IUBAT—International University of Business Agriculture and Technology</p>
+                <div class="mt-4">
+                    <a href="https://www.linkedin.com/in/shahriarmimon/" target="_blank" rel="noopener noreferrer" class="inline-block bg-slate-700 text-white font-semibold px-4 py-2 rounded-lg hover:bg-slate-600 transition-colors">
+                        Connect on LinkedIn
+                    </a>
+                </div>
+            </div>
+            <div class="border-t border-slate-700 mt-8 pt-8">
+                <p class="font-semibold text-white">The Agri-Preserve Hub Initiative</p>
+                <p class="text-sm mt-1 text-slate-400">A strategic blueprint for a more resilient, profitable, and food-secure agricultural future for Bangladesh.</p>
+            </div>
         </div>
     </footer>
-
 
 <script>
 document.addEventListener('DOMContentLoaded', () => {
 
-    const reportData = {
-        phl: {
-            labels: ['Mango', 'Tomato', 'Potato', 'Banana', 'Litchi', 'Brinjal', 'Pineapple'],
-            data: [31.7, 27.9, 21.8, 21.7, 24.9, 32.0, 24.0] 
-        },
-        financials: {
-            labels: ['Year 1', 'Year 2', 'Year 3', 'Year 4', 'Year 5'],
-            ebitda: [-2646, 189, 3938, 7670, 10685],
-        },
-        timeline: {
-            phase1: {
-                title: 'Phase 1: Pilot Implementation & Partnership (Years 1-2)',
-                content: 'The project will begin with a collaboration between BARI, local engineering firms, and solar providers to design and test the first prototype. This hub will then be deployed with a partner FPO in a major horticultural zone like Rajshahi or Jashore to field-test the technology, refine the business model, and build community trust.'
-            },
-            phase2: {
-                title: 'Phase 2: Technology Transfer and Commercialization (Years 2-3)',
-                content: 'Focus on domesticating the technology supply chain. License the BARI Hybrid Dryer to local manufacturers and partner with local firms to assemble solar cold rooms domestically. Collaborate with BSTI to enforce quality standards, ensuring reliability and building farmer trust.'
-            },
-            phase3: {
-                title: 'Phase 3: Scaling via Blended Finance (Year 3 onwards)',
-                content: 'With a proven model, the project will seek to scale through public-private-community partnerships. This involves securing blended finance, including initial grants from climate funds (like GCF), followed by larger-scale loans from DFIs (World Bank, ADB) and investment from impact investors.'
-            },
-            phase4: {
-                title: 'Phase 4: Policy and Institutional Integration (Ongoing)',
-                content: 'Embed the hub network into national policy like the National Agriculture Policy and BCCSAP. Advocate for an enabling environment for FPOs and establish a formal Public-Private Partnership (PPP) framework to accelerate deployment and ensure long-term sustainability.'
-            }
-        },
-        recommendations: [
-            {
-                title: 'For the Government of Bangladesh',
-                content: 'Endorse and champion the pilot program. Facilitate an enabling policy environment for FPOs by streamlining registration and creating credit lines. Integrate hub rollout into national infrastructure planning (e.g., with LGED) to maximize synergies.'
-            },
-            {
-                title: 'For Multilateral Development Banks & International Partners',
-                content: 'Provide catalytic grant funding (e.g., from GCF) for the high-risk pilot phase. Offer technical assistance for M&E and capacity building. Following a successful pilot, structure large-scale DFI loans and PPP frameworks for national expansion.'
-            },
-            {
-                title: 'For Impact Investors & the Private Sector',
-                content: 'Engage early as co-investors, technical partners, or produce off-takers. Develop innovative financial products like working capital loans for FPO-hubs. Invest in the downstream value chain to leverage the reliable supply of high-quality produce.'
-            }
-        ]
-    };
-    
-    const animateCounter = (el) => {
-        const target = +el.dataset.target;
-        const duration = 2000;
-        const suffix = el.dataset.suffix || '';
-        const decimals = target % 1 !== 0 ? (target.toString().split('.')[1] || '').length : 0;
-        let start = 0;
-        const stepTime = 20;
-        const totalSteps = duration / stepTime;
-        const increment = target / totalSteps;
+    const sections = document.querySelectorAll('main > section');
+    const navLinks = document.querySelectorAll('#nav-links a');
 
-        const timer = setInterval(() => {
-            start += increment;
-            if (start >= target) {
-                start = target;
-                clearInterval(timer);
-            }
-            el.textContent = start.toFixed(decimals) + suffix;
-        }, stepTime);
+    const observerOptions = {
+        root: null,
+        rootMargin: '0px',
+        threshold: 0.3
     };
 
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
-                const counter = entry.target;
-                animateCounter(counter);
-                observer.unobserve(counter);
+                navLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href').substring(1) === entry.target.id) {
+                        link.classList.add('active');
+                    }
+                });
             }
         });
-    }, { threshold: 0.5 });
-    
-    document.querySelectorAll('[data-anim-counter]').forEach(counter => {
-        observer.observe(counter);
+    }, observerOptions);
+
+    sections.forEach(section => {
+        observer.observe(section);
     });
 
-    const ctxPhl = document.getElementById('phlChart');
-    if(ctxPhl) {
-        new Chart(ctxPhl, {
+    // Chart 1: Post-Harvest Loss
+    const lossData = {
+        labels: ['Mango', 'Tomato', 'Potato', 'Litchi', 'Brinjal', 'Pineapple'],
+        data: [39.4, 42.4, 28.0, 36.6, 42.6, 32.0]
+    };
+    const ctxLoss = document.getElementById('lossChart')?.getContext('2d');
+    if (ctxLoss) {
+        new Chart(ctxLoss, {
             type: 'bar',
             data: {
-                labels: reportData.phl.labels,
+                labels: lossData.labels,
                 datasets: [{
                     label: 'Post-Harvest Loss (%)',
-                    data: reportData.phl.data,
-                    backgroundColor: 'rgba(217, 119, 6, 0.6)',
-                    borderColor: 'rgba(217, 119, 6, 1)',
+                    data: lossData.data,
+                    backgroundColor: 'rgba(22, 163, 74, 0.6)',
+                    borderColor: 'rgba(22, 163, 74, 1)',
                     borderWidth: 1
                 }]
             },
             options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: { y: { beginAtZero: true, title: { display: true, text: 'Loss Percentage (%)' } } },
+                plugins: { legend: { display: false } }
+            }
+        });
+    }
+
+    // Solution Tabs
+    const tabs = document.querySelectorAll('.solution-tab');
+    const contents = document.querySelectorAll('.solution-content');
+    tabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+            tabs.forEach(t => t.classList.remove('active'));
+            tab.classList.add('active');
+            
+            const targetId = tab.dataset.target + '-content';
+            contents.forEach(content => {
+                if (content.id === targetId) {
+                    content.classList.remove('hidden');
+                } else {
+                    content.classList.add('hidden');
+                }
+            });
+        });
+    });
+
+     // Chart 2: Financials
+    const BDT_CONVERSION_RATE = 117;
+    const revenueUSD = [5654, 8655, 12573, 16478, 19669];
+    const revenueBDT = revenueUSD.map(v => v * BDT_CONVERSION_RATE);
+    const opexBDT = 300000;
+    const opexBDTArray = Array(5).fill(opexBDT);
+
+    const financialsData = {
+        labels: ['Year 1', 'Year 2', 'Year 3', 'Year 4', 'Year 5'],
+        revenue: revenueBDT,
+        opex: opexBDTArray,
+        ebitda: revenueBDT.map(r => r - opexBDT)
+    };
+    const ctxFinancials = document.getElementById('financialsChart')?.getContext('2d');
+    if (ctxFinancials) {
+        new Chart(ctxFinancials, {
+            type: 'bar',
+            data: {
+                labels: financialsData.labels,
+                datasets: [
+                    {
+                        label: 'Revenue',
+                        data: financialsData.revenue,
+                        backgroundColor: 'rgba(22, 163, 74, 0.6)',
+                        borderColor: 'rgba(22, 163, 74, 1)',
+                        borderWidth: 1,
+                        order: 2
+                    },
+                    {
+                        label: 'OpEx',
+                        data: financialsData.opex,
+                        backgroundColor: 'rgba(239, 68, 68, 0.6)',
+                        borderColor: 'rgba(239, 68, 68, 1)',
+                        borderWidth: 1,
+                        order: 2
+                    },
+                    {
+                        label: 'Projected EBITDA (BDT)',
+                        data: financialsData.ebitda,
+                        type: 'line',
+                        fill: false,
+                        borderColor: 'rgb(59, 130, 246)',
+                        tension: 0.3,
+                        order: 1,
+                        pointBackgroundColor: 'rgb(59, 130, 246)',
+                        pointRadius: 5
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
                 maintainAspectRatio: false,
                 scales: {
                     y: {
-                        beginAtZero: true,
-                        title: {
-                            display: true,
-                            text: 'Loss Percentage (%)'
-                        }
+                        beginAtZero: false,
+                        title: { display: true, text: 'Amount (BDT)' },
+                        ticks: { callback: value => '৳' + new Intl.NumberFormat('en-BD').format(value) }
                     }
                 },
                 plugins: {
-                    legend: {
-                        display: false
-                    },
+                    legend: { position: 'top', },
                     tooltip: {
                         callbacks: {
-                            label: function(context) {
-                                return `Loss: ${context.parsed.y}%`;
-                            }
-                        }
-                    }
-                }
-            }
-        });
-    }
-    
-    const ctxFinancials = document.getElementById('financialsChart');
-    if(ctxFinancials) {
-        new Chart(ctxFinancials, {
-            type: 'line',
-            data: {
-                labels: reportData.financials.labels,
-                datasets: [{
-                    label: 'EBITDA (USD)',
-                    data: reportData.financials.ebitda,
-                    fill: true,
-                    backgroundColor: 'rgba(22, 163, 74, 0.1)',
-                    borderColor: 'rgb(22, 163, 74)',
-                    tension: 0.3
-                }]
-            },
-            options: {
-                maintainAspectRatio: false,
-                scales: {
-                    y: {
-                        title: {
-                            display: true,
-                            text: 'EBITDA (USD)'
-                        }
-                    }
-                },
-                 plugins: {
-                    tooltip: {
-                        callbacks: {
-                            label: function(context) {
-                                return `EBITDA: $${context.parsed.y.toLocaleString()}`;
+                            label: (context) => {
+                                let label = context.dataset.label || '';
+                                if (label) { label += ': '; }
+                                label += `৳${new Intl.NumberFormat('en-BD').format(context.parsed.y)}`;
+                                return label;
                             }
                         }
                     }
@@ -530,86 +564,71 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    const solutionDetails = document.getElementById('solution-details');
-    const hotspots = {
-        'hotspot-cold-room': 'details-cold-room',
-        'hotspot-dryer': 'details-dryer',
-        'hotspot-services': 'details-services'
-    };
-    
-    Object.keys(hotspots).forEach(hotspotId => {
-        const hotspotEl = document.getElementById(hotspotId);
-        hotspotEl.addEventListener('click', () => {
-            document.getElementById('details-initial').classList.add('hidden');
-            Object.values(hotspots).forEach(detailId => document.getElementById(detailId).classList.add('hidden'));
-            document.getElementById(hotspots[hotspotId]).classList.remove('hidden');
+    // Gemini API Integration
+    const generateProductsBtn = document.getElementById('generate-products-btn');
+    const productsLoader = document.getElementById('products-loader');
+    const productsOutput = document.getElementById('products-output');
+    const cropSelect = document.getElementById('crop-select');
 
-            Object.keys(hotspots).forEach(id => document.getElementById(id).classList.remove('active-hotspot'));
-            hotspotEl.classList.add('active-hotspot');
-        });
-    });
+    const apiKey = ""; 
 
-    const timelineContainer = document.getElementById('timeline-container');
-    const timelineDetails = document.getElementById('timeline-details');
-    const timelineItems = document.querySelectorAll('.timeline-item');
+    async function callGemini(prompt) {
+        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+        const payload = {
+            contents: [{ role: "user", parts: [{ text: prompt }] }]
+        };
 
-    const updateTimelineDetails = (phaseKey) => {
-        const phaseData = reportData.timeline[phaseKey];
-        timelineDetails.innerHTML = `
-            <h4 class="font-bold text-xl text-stone-900">${phaseData.title}</h4>
-            <p class="mt-3 text-stone-600">${phaseData.content}</p>
-        `;
-    };
+        try {
+            const response = await fetch(apiUrl, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
 
-    timelineContainer.addEventListener('click', (e) => {
-        const targetItem = e.target.closest('.timeline-item');
-        if (!targetItem) return;
+            if (!response.ok) { throw new Error(`API call failed with status: ${response.status}`); }
 
-        const phase = targetItem.dataset.phase;
+            const result = await response.json();
+            if (result.candidates && result.candidates.length > 0 &&
+                result.candidates[0].content && result.candidates[0].content.parts &&
+                result.candidates[0].content.parts.length > 0) {
+                return result.candidates[0].content.parts[0].text;
+            } else {
+                return "Sorry, I couldn't generate a response. The model's response was empty.";
+            }
+        } catch (error) {
+            console.error("Error calling Gemini API:", error);
+            return `An error occurred: ${error.message}. Please check the console for details.`;
+        }
+    }
+
+    generateProductsBtn.addEventListener('click', async () => {
+        const selectedCrop = cropSelect.value;
+        const prompt = `For the crop '${selectedCrop}' grown in Bangladesh, suggest 3 creative and high-value dried food products that could be made using an Agri-Preserve Hub's hybrid dryer. For each product, provide a one-sentence description and a one-sentence on its target market. Format the response as a numbered list where each item starts with "**Product Name:**". Example: 1. **Spicy Mango Strips:** Dried mango infused with local chili. Target market is young urban consumers looking for healthy, gourmet snacks.`;
+
+        productsLoader.classList.remove('hidden');
+        productsOutput.innerHTML = '';
         
-        timelineItems.forEach(item => item.classList.remove('active'));
-        targetItem.classList.add('active');
+        const resultText = await callGemini(prompt);
         
-        updateTimelineDetails(`phase${phase}`);
-    });
+        productsLoader.classList.add('hidden');
+        
+        const products = resultText.split(/\n(?=\d\.\s)/).map(p => p.trim());
+        let html = '';
+        products.forEach(product => {
+            if (product.length > 0) {
+                const nameMatch = product.match(/\*\*(.*?)\*\*/);
+                const name = nameMatch ? nameMatch[1] : 'Generated Product';
+                const description = product.replace(/^\d\.\s*\*\*(.*?)\*\*:/, '').trim();
 
-    const initialPhase = document.querySelector('.timeline-item[data-phase="1"]');
-    initialPhase.classList.add('active');
-    updateTimelineDetails('phase1');
-
-    const accordionContainer = document.getElementById('accordion-container');
-    reportData.recommendations.forEach((item, index) => {
-        const accItem = document.createElement('div');
-        accItem.className = 'border border-stone-200 rounded-lg overflow-hidden';
-        accItem.innerHTML = `
-            <button class="accordion-header w-full text-left p-4 bg-stone-50 hover:bg-stone-100 flex justify-between items-center transition-colors">
-                <span class="font-semibold text-lg text-stone-800">${item.title}</span>
-                <span class="accordion-icon text-2xl text-stone-500 font-light transition-transform transform">+</span>
-            </button>
-            <div class="accordion-content p-4 bg-white hidden">
-                <p class="text-stone-600">${item.content}</p>
-            </div>
-        `;
-        accordionContainer.appendChild(accItem);
-
-        const header = accItem.querySelector('.accordion-header');
-        const content = accItem.querySelector('.accordion-content');
-        const icon = accItem.querySelector('.accordion-icon');
-
-        header.addEventListener('click', () => {
-            const isOpen = !content.classList.contains('hidden');
-            
-            document.querySelectorAll('.accordion-content').forEach(c => c.classList.add('hidden'));
-            document.querySelectorAll('.accordion-icon').forEach(i => { i.textContent = '+'; i.classList.remove('rotate-45'); });
-
-            if (!isOpen) {
-                content.classList.remove('hidden');
-                icon.textContent = '+';
-                icon.classList.add('rotate-45');
+                html += `
+                <div class="bg-slate-50 p-4 rounded-lg border border-slate-200">
+                    <h4 class="font-bold text-green-700">${name}</h4>
+                    <p class="mt-1 text-slate-600">${description}</p>
+                </div>`;
             }
         });
+        productsOutput.innerHTML = html;
     });
-
 });
 </script>
 </body>
